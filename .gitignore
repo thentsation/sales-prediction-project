@@ -1,4 +1,12 @@
 .venv
-mlruns
-__pycache__
-*.pkl
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.env
+.idea
+.vscode
+mlruns/
+models/
+logs/
+mlflow.db
