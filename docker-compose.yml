@@ -1,0 +1,8 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: sales-prediction-project
+    ports:
+      - '8020:8000'
