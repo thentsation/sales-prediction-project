@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v1.0.2 (2026-09-26)
+
+### Bug Fixes
+
+- Broaden Trivy's pip/_vendor skip-dirs to a recursive glob
+  ([`4e8e9c3`](https://github.com/thentsation/sales-prediction-project/commit/4e8e9c3719ec289396a86790b1cefa0138be68c9))
+
+### Chores
+
+- **deps**: Update scikit-learn requirement in /config
+  ([#7](https://github.com/thentsation/sales-prediction-project/pull/7),
+  [`307499b`](https://github.com/thentsation/sales-prediction-project/commit/307499b606406b53b5d937e823ccfbe3433c9b0b))
+
+
 ## v1.0.1 (2026-09-26)
 
 ### Bug Fixes
