@@ -2,6 +2,24 @@
 
 <!-- version list -->
 
+## v1.0.4 (2026-09-28)
+
+### Bug Fixes
+
+- **ci**: Open lockfile PRs with RELEASE_PAT so CI runs on them
+  ([`d564620`](https://github.com/thentsation/sales-prediction-project/commit/d564620173899255d71178cab4925542d04f810f))
+
+### Chores
+
+- **deps**: Update pandas requirement in /config
+  ([#5](https://github.com/thentsation/sales-prediction-project/pull/5),
+  [`5a9b931`](https://github.com/thentsation/sales-prediction-project/commit/5a9b931250cf97a03633e036cf3959a3353466bd))
+
+- **deps**: Update starlette requirement in /config
+  ([#4](https://github.com/thentsation/sales-prediction-project/pull/4),
+  [`5892578`](https://github.com/thentsation/sales-prediction-project/commit/5892578de13c58f0fe302d76510fddf2eae48f70))
+
+
 ## v1.0.3 (2026-09-28)
 
 ### Bug Fixes
