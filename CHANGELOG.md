@@ -2,6 +2,24 @@
 
 <!-- version list -->
 
+## v1.0.3 (2026-09-28)
+
+### Bug Fixes
+
+- Use RELEASE_PAT so dependabot auto-merge can write to PRs
+  ([`8b30049`](https://github.com/thentsation/sales-prediction-project/commit/8b30049f36a5b9c59dadc7f01511fd98d339bc31))
+
+### Chores
+
+- **deps**: Bump ruff from 0.16.8 to 0.16.9 in /config
+  ([#9](https://github.com/thentsation/sales-prediction-project/pull/9),
+  [`51767d1`](https://github.com/thentsation/sales-prediction-project/commit/51767d103c98248b72cffeeef491216997bac2be))
+
+- **deps**: Update uvicorn requirement in /config
+  ([#8](https://github.com/thentsation/sales-prediction-project/pull/8),
+  [`a023035`](https://github.com/thentsation/sales-prediction-project/commit/a023035a6d1bc98f99ebf7124d222d4865473ce3))
+
+
 ## v1.0.2 (2026-09-26)
 
 ### Bug Fixes
