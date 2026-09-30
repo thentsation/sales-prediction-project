@@ -35,7 +35,7 @@ docker-build:
 	docker build -f docker/Dockerfile -t sales-prediction-project .
 
 docker-run:
-	docker run --rm -p 8000:8000 sales-prediction-project
+	docker run --rm -p 8021:8000 sales-prediction-project
 
 clean:
 	find . -type d -name __pycache__ -not -path './$(VENV)/*' -exec rm -rf {} +

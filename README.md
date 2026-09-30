@@ -49,6 +49,8 @@ make docker-build
 make docker-run
 ```
 
+With Docker (`make docker-run` or `docker compose up`) the API is published on host port **8021** (container port 8000): http://127.0.0.1:8021/docs
+
 ## Development
 
 ```bash

@@ -49,6 +49,8 @@ make docker-build
 make docker-run
 ```
 
+Com Docker (`make docker-run` ou `docker compose up`) a API fica publicada na porta **8021** do host (porta 8000 no container): http://127.0.0.1:8021/docs
+
 ## Desenvolvimento
 
 ```bash
