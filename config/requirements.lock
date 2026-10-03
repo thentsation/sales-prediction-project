@@ -53,7 +53,7 @@ databricks-sdk==0.143.0
     #   mlflow-tracing
 docker==7.2.0
     # via mlflow
-fastapi==0.141.1
+fastapi==0.142.2
     # via
     #   -r config/requirements.txt
     #   mlflow-skinny
@@ -139,6 +139,7 @@ numpy==2.5.3
     #   skops
 opentelemetry-api==1.45.0
     # via
+    #   fastapi
     #   mlflow-skinny
     #   mlflow-tracing
     #   opentelemetry-sdk
@@ -159,7 +160,7 @@ packaging==26.3
     #   mlflow-skinny
     #   mlflow-tracing
     #   skops
-pandas==2.3.3
+pandas==3.0.6
     # via
     #   -r config/requirements.txt
     #   mlflow
@@ -201,8 +202,6 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-dotenv==1.2.3
     # via mlflow-skinny
-pytz==2026.4
-    # via pandas
 pywin32==312 ; sys_platform == 'win32'
     # via docker
 pyyaml==6.0.3
@@ -243,8 +242,6 @@ threadpoolctl==3.7.0
     # via scikit-learn
 typing-extensions==4.16.0
     # via
-    #   aiohttp
-    #   aiosignal
     #   alembic
     #   anyio
     #   fastapi
@@ -256,20 +253,19 @@ typing-extensions==4.16.0
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
-    #   starlette
     #   typing-inspection
 typing-inspection==0.4.4
     # via
     #   fastapi
     #   pydantic
-tzdata==2026.4
+tzdata==2026.4 ; sys_platform == 'emscripten' or sys_platform == 'win32'
     # via pandas
 urllib3==2.8.0
     # via
     #   databricks-sdk
     #   docker
     #   requests
-uvicorn==0.38.0
+uvicorn==0.54.0
     # via
     #   -r config/requirements.txt
     #   mlflow-skinny
