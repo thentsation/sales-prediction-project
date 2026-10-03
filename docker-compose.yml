@@ -1,8 +1,35 @@
 services:
-  api:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
+  app:
+    image: ${APP_IMAGE:-gru.ocir.io/grun5vjqis7z/sales-prediction-project:latest}
+    pull_policy: missing
     container_name: sales-prediction-project
-    ports:
-      - '8020:8000'
+    restart: unless-stopped
+    expose:
+      - '8000'
+    env_file:
+      - path: ${APP_ENV_FILE:-.env}
+        required: false
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=4).status == 200 else 1)"
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=${PROXY_NETWORK:-proxy}
+      - traefik.http.routers.sales-prediction-project.rule=Host(`sales-prediction.137-131-175-7.sslip.io`)
+      - traefik.http.routers.sales-prediction-project.entrypoints=websecure
+      - traefik.http.routers.sales-prediction-project.tls.certresolver=letsencrypt
+      - traefik.http.services.sales-prediction-project.loadbalancer.server.port=8000
+
+networks:
+  proxy:
+    name: ${PROXY_NETWORK:-proxy}
+    external: true
