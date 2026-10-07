@@ -1,5 +1,8 @@
 # Sales Prediction API
 
+[![Python CI](https://github.com/thentsation/sales-prediction-project/actions/workflows/pipeline_python.yaml/badge.svg)](https://github.com/thentsation/sales-prediction-project/actions/workflows/pipeline_python.yaml)
+[![Docker CI/CD](https://github.com/thentsation/sales-prediction-project/actions/workflows/pipeline_docker.yaml/badge.svg)](https://github.com/thentsation/sales-prediction-project/actions/workflows/pipeline_docker.yaml)
+
 > Read in [English](README.md).
 
 Prediz o valor de venda de uma transação de cafeteria com um `RandomForestRegressor`, treinado num dataset real de ponto de venda (2176 transações), rastreado com MLflow e servido com FastAPI.
@@ -56,8 +59,4 @@ make format       # ruff format
 make typecheck    # mypy
 ```
 
-CI e deploy rodam no Jenkins da plataforma (`Jenkinsfile` → `appPipeline` da Shared Library `platform`, repo devops-platform), disparados por webhooks. Sem GitHub Actions.
-
-- **PRs e branches** — validação do contrato; `docker build --target test` (`ruff check`, `ruff format --check`, `mypy`, `pytest` com cobertura ≥90% em Python 3.11 e 3.12, versões das ferramentas no `config/requirements-dev.txt`); `pip-audit` no `config/requirements.lock`; Trivy (CRITICAL/HIGH) na imagem de runtime.
-- **main** — tudo acima e depois build, smoke test, push para o OCIR, deploy atrás do Traefik em https://sales-prediction.137-131-175-7.sslip.io com rollback automático, release com o python-semantic-release (versão, CHANGELOG, tag e release no GitHub) e rebuild do portfolio. Também é reconstruída toda segunda para pegar patches de segurança.
-- **Dependências** — Renovate (job `platform/renovate` no Jenkins, `renovate.json` → preset do devops-platform): atualizações diárias, manutenção semanal do lockfile, issue "Dependency Dashboard" e auto-merge de patch/minor depois que o Jenkins aprova.
+O CI roda ruff, pytest (com piso de cobertura), mypy e pip-audit em todo push/PR, além de uma execução diária agendada. Imagens Docker são construídas, escaneadas com Trivy e publicadas no GHCR na `main`. O Dependabot mantém pip, imagem base do Docker e GitHub Actions atualizados, com bumps patch/minor mesclados automaticamente. Releases são versionados automaticamente com [python-semantic-release](https://python-semantic-release.readthedocs.io/).
