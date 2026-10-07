@@ -116,11 +116,11 @@ markupsafe==3.0.4
     #   werkzeug
 matplotlib==3.11.2
     # via mlflow
-mlflow==3.16.1
+mlflow==3.17.0
     # via -r config/requirements.txt
-mlflow-skinny==3.16.1
+mlflow-skinny==3.17.0
     # via mlflow
-mlflow-tracing==3.16.1
+mlflow-tracing==3.17.0
     # via mlflow
 multidict==6.9.1
     # via
