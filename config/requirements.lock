@@ -242,6 +242,8 @@ threadpoolctl==3.7.0
     # via scikit-learn
 typing-extensions==4.16.0
     # via
+    #   aiohttp
+    #   aiosignal
     #   alembic
     #   anyio
     #   fastapi
@@ -253,6 +255,7 @@ typing-extensions==4.16.0
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
+    #   starlette
     #   typing-inspection
 typing-inspection==0.4.4
     # via
