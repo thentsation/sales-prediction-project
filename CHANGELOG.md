@@ -2,6 +2,84 @@
 
 <!-- version list -->
 
+## v1.0.6 (2026-11-15)
+
+### Bug Fixes
+
+- **docker**: Use python 3.14 so the wheels install, and upgrade pip so the scan passes
+  ([#58](https://github.com/thentsation/sales-prediction-project/pull/58),
+  [`875bd27`](https://github.com/thentsation/sales-prediction-project/commit/875bd273e4760634c74c65cc407db74343d8c796))
+
+### Chores
+
+- **ci**: Bump astral-sh/setup-uv from 10.3.2 to 10.3.3
+  ([#48](https://github.com/thentsation/sales-prediction-project/pull/48),
+  [`ab91a7f`](https://github.com/thentsation/sales-prediction-project/commit/ab91a7f77b4ef54c21d42dc8a1576c7a58dbb38c))
+
+- **ci**: Bump peter-evans/create-pull-request from 8.1.1 to 8.1.2
+  ([#52](https://github.com/thentsation/sales-prediction-project/pull/52),
+  [`51b3677`](https://github.com/thentsation/sales-prediction-project/commit/51b367780af5b0667a0a7c1ff7c7d6c5a1c52929))
+
+- **ci**: Bump peter-evans/create-pull-request from 8.1.2 to 8.1.3
+  ([#57](https://github.com/thentsation/sales-prediction-project/pull/57),
+  [`fd65cf0`](https://github.com/thentsation/sales-prediction-project/commit/fd65cf0c87aaa6fd59080b2d5107e75acfa3b067))
+
+- **deps**: Bump mypy from 2.4.0 to 2.4.1 in /config
+  ([#49](https://github.com/thentsation/sales-prediction-project/pull/49),
+  [`78157f4`](https://github.com/thentsation/sales-prediction-project/commit/78157f426aee1eccd10bd35f2565cee8c1969ac4))
+
+- **deps**: Bump pytest from 9.1.1 to 9.2.0 in /config
+  ([#50](https://github.com/thentsation/sales-prediction-project/pull/50),
+  [`e72c69f`](https://github.com/thentsation/sales-prediction-project/commit/e72c69f813a933ccbb368009b931a2a5430ba1aa))
+
+- **deps**: Bump python from 3.14-slim to 3.15-slim in /docker
+  ([#51](https://github.com/thentsation/sales-prediction-project/pull/51),
+  [`741404f`](https://github.com/thentsation/sales-prediction-project/commit/741404f345e78b326d651bd6e027dac723928cae))
+
+- **deps**: Bump ruff from 0.17.2 to 0.17.3 in /config
+  ([#47](https://github.com/thentsation/sales-prediction-project/pull/47),
+  [`6648a2e`](https://github.com/thentsation/sales-prediction-project/commit/6648a2ea7f1e627b27c54c252169fb8c62dd543d))
+
+- **deps**: Bump ruff from 0.17.3 to 0.17.4 in /config
+  ([#54](https://github.com/thentsation/sales-prediction-project/pull/54),
+  [`de3fc08`](https://github.com/thentsation/sales-prediction-project/commit/de3fc08a088e4e4a35cd7be168356b6b8300ef51))
+
+- **deps**: Update fastapi requirement in /config
+  ([#56](https://github.com/thentsation/sales-prediction-project/pull/56),
+  [`b7e61ec`](https://github.com/thentsation/sales-prediction-project/commit/b7e61ec9f78dd45c67096e5e17ffa77f94f2716c))
+
+- **deps**: Update fastapi requirement in /config
+  ([#45](https://github.com/thentsation/sales-prediction-project/pull/45),
+  [`0e28742`](https://github.com/thentsation/sales-prediction-project/commit/0e28742f0974ca5878aae8df95dd818531c56cd8))
+
+- **deps**: Update lockfile ([#43](https://github.com/thentsation/sales-prediction-project/pull/43),
+  [`7b316cc`](https://github.com/thentsation/sales-prediction-project/commit/7b316cc733973292984373d3cafd8acb2a23c085))
+
+- **deps**: Update mlflow requirement in /config
+  ([#55](https://github.com/thentsation/sales-prediction-project/pull/55),
+  [`c93ae88`](https://github.com/thentsation/sales-prediction-project/commit/c93ae885e60ec93a9de3c02a2fe1d2ecbea10ee5))
+
+- **deps**: Update mlflow requirement in /config
+  ([#40](https://github.com/thentsation/sales-prediction-project/pull/40),
+  [`bec25da`](https://github.com/thentsation/sales-prediction-project/commit/bec25da23e46942bfe8fc3164ebb873b5b94f08b))
+
+- **deps**: Update pandas requirement in /config
+  ([#53](https://github.com/thentsation/sales-prediction-project/pull/53),
+  [`4513d3c`](https://github.com/thentsation/sales-prediction-project/commit/4513d3c1f6a4532b4c2bbfe2c3f0af15bbc38f63))
+
+- **deps**: Update pandas requirement in /config
+  ([#44](https://github.com/thentsation/sales-prediction-project/pull/44),
+  [`be01439`](https://github.com/thentsation/sales-prediction-project/commit/be014392fd6a4988562b25be09c21236dc199c22))
+
+- **deps**: Update starlette requirement in /config
+  ([#46](https://github.com/thentsation/sales-prediction-project/pull/46),
+  [`93d0f0a`](https://github.com/thentsation/sales-prediction-project/commit/93d0f0a1c7385176b10b86bb4b661a7394186e75))
+
+- **deps**: Update starlette requirement in /config
+  ([#32](https://github.com/thentsation/sales-prediction-project/pull/32),
+  [`21fa228`](https://github.com/thentsation/sales-prediction-project/commit/21fa228305f184b39793a361da2b7fdf7dc424c7))
+
+
 ## v1.0.5 (2026-10-26)
 
 ### Bug Fixes
