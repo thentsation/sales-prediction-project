@@ -8,19 +8,20 @@ aiosignal==1.4.0
     # via aiohttp
 alembic==1.20.1
     # via mlflow
-annotated-doc==0.0.5
+annotated-doc==0.0.6
     # via fastapi
 annotated-types==0.8.0
     # via pydantic
 anyio==4.16.0
     # via
+    #   fastapi
     #   mlflow-skinny
     #   starlette
 attrs==26.1.0
     # via aiohttp
 blinker==1.9.0
     # via flask
-cachetools==7.3.0
+cachetools==7.3.2
     # via
     #   mlflow-skinny
     #   mlflow-tracing
@@ -49,13 +50,13 @@ cryptography==50.0.2
     #   mlflow
 cycler==0.12.1
     # via matplotlib
-databricks-sdk==0.163.0
+databricks-sdk==0.167.0
     # via
     #   mlflow-skinny
     #   mlflow-tracing
 docker==7.2.0
     # via mlflow
-fastapi==0.162.2
+fastapi==0.162.7
     # via
     #   -r config/requirements.txt
     #   mlflow-skinny
@@ -75,7 +76,7 @@ gitdb==4.0.12
     # via gitpython
 gitpython==3.2.1
     # via mlflow-skinny
-google-auth==2.62.1
+google-auth==2.62.2
     # via databricks-sdk
 graphene==3.4.3
     # via mlflow
@@ -96,7 +97,7 @@ idna==3.20
     #   anyio
     #   requests
     #   yarl
-importlib-metadata==9.1.0
+importlib-metadata==10.2.0
     # via mlflow-skinny
 itsdangerous==2.2.0
     # via flask
@@ -108,6 +109,8 @@ joblib==1.6.0
     #   scikit-learn
 kiwisolver==1.5.1
     # via matplotlib
+lazy-importer==0.1.0 ; python_full_version < '3.15'
+    # via importlib-metadata
 mako==1.4.3
     # via alembic
 markupsafe==3.0.4
@@ -118,11 +121,11 @@ markupsafe==3.0.4
     #   werkzeug
 matplotlib==3.11.2
     # via mlflow
-mlflow==3.17.2
+mlflow==3.18.0
     # via -r config/requirements.txt
-mlflow-skinny==3.17.2
+mlflow-skinny==3.18.0
     # via mlflow
-mlflow-tracing==3.17.2
+mlflow-tracing==3.18.0
     # via mlflow
 multidict==7.2.1
     # via
@@ -130,7 +133,7 @@ multidict==7.2.1
     #   yarl
 narwhals==2.28.0
     # via scikit-learn
-numpy==2.5.4
+numpy==2.5.5
     # via
     #   contourpy
     #   matplotlib
@@ -180,7 +183,7 @@ protobuf==7.36.2
     #   mlflow-skinny
     #   mlflow-tracing
     #   opentelemetry-proto
-pyarrow==25.0.1
+pyarrow==26.0.1
     # via mlflow
 pyasn1==0.6.5
     # via pyasn1-modules
@@ -203,6 +206,8 @@ python-dateutil==2.9.0.post0
     #   matplotlib
     #   pandas
 python-dotenv==1.2.4
+    # via mlflow-skinny
+python-multipart==0.0.34
     # via mlflow-skinny
 pywin32==312 ; sys_platform == 'win32'
     # via docker
