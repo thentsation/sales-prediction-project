@@ -49,6 +49,42 @@ make docker-build
 make docker-run
 ```
 
+## Telvax version
+
+`telvax/` has this project written in [Telvax](https://github.com/telvax/telvax):
+* training: the same features, label encoders and split;
+* the model: standard scaling and a random forest of 100 trees, from the [`learn`](https://github.com/telvax/learn) package;
+* MLflow logging, from the [`mlflow`](https://github.com/telvax/mlflow) package;
+* the service, with the same `/health` and `/predict`.
+
+The predictor is one value (`SalesPredictor`: the fitted scalers, the forest and the label encoders) saved with
+`std.model`. Loading it gives the scaling with the model, so the API cannot predict without it, and a file of another type
+is refused. Nothing is unpickled.
+
+```sh
+cd telvax
+tvpm run main                                             # train, save models/sales_predictor.tvxmodel
+MLFLOW_TRACKING_URI=http://localhost:5000 tvpm run main   # also log mae and mse to MLflow
+telvax serve src/service.tvx --port 8000                  # GET /health, POST /predict
+telvax build --serve src/service.tvx -o sales-api         # one binary; docker/telvax.Dockerfile builds the image
+```
+
+The same request to both services gives the same prediction: `{"features": [1711000000.0, 0, 100, 3]}` gives 38.70 from
+both, the Python one given its datetime as described below. On the same 418 test rows:
+
+| | MAE | RMSE | R² |
+|---|---|---|---|
+| Python (scikit-learn) | 0.0122 | 0.0969 | 0.9996 |
+| Telvax | 0.0152 | 0.1248 | 0.9994 |
+
+The forests differ because the bootstrap draws come from another generator. Each version's own split also differs:
+Python's gives MAE 0.0268 and Telvax's MAE 0.0152. Training takes 56 s in Telvax (the trees are grown in the
+interpreter) against about 3 s.
+
+Found while porting: `datetime` is documented as epoch seconds, but with pandas 3 `pd.to_datetime(...)` is in
+milliseconds, so `.astype("int64") / 10**9` gives thousandths of a second. A request with real epoch seconds is then far
+outside what the Python model was trained on. The Telvax version uses real seconds, as the API description says.
+
 ## Development
 
 ```bash

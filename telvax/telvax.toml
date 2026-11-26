@@ -1,0 +1,10 @@
+[package]
+name = "sales_prediction"
+version = "0.1.0"
+edition = "2026"
+description = "Sales prediction: the Telvax version of this repository (a random forest with its preprocessing, served over HTTP)"
+entry = "src/main.tvx"
+
+[dependencies]
+learn = "^0.1"
+mlflow = "^0.1"

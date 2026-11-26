@@ -1,0 +1,52 @@
+# src/models/sales_model.py: a random forest of 100 trees on the standardized features. The predictor is one value with
+# the fitted scalers, the forest and the label encoders, saved with std.model: loading it gives the preprocessing with
+# the model, so a prediction cannot skip the scaling (the bug the Python comment warns about).
+from std.ml import Scaler, LabelEncoder
+from learn.tree import Forest, fit_forest_regressor, predict_values
+
+let DEFAULT_MODEL_PATH = "models/sales_predictor.tvxmodel"
+
+type SalesPredictor:
+    scalers: List[Scaler]
+    forest: Forest
+    encoders: List[LabelEncoder]
+
+fn columns(rows: List[List[Float]]) -> List[List[Float]]:
+    var out: List[List[Float]] = []
+    for j in range(std.math.to_int(rows.get(0).unwrap().len())):
+        out.push(rows |> std.iter.map(r => r.get(j).unwrap()))
+    out
+
+# StandardScaler.transform: each feature with the mean and deviation of the training rows.
+fn scale(scalers: List[Scaler], rows: List[List[Float]]) -> List[List[Float]]:
+    let scaled = std.iter.zip(scalers, columns(rows)) |> std.iter.map(p => p.0.apply(p.1))
+    var out: List[List[Float]] = []
+    for i in range(std.math.to_int(rows.len())):
+        out.push(scaled |> std.iter.map(c => c.get(i).unwrap()))
+    out
+
+# train: the scalers fitted on the training rows, then RandomForestRegressor(n_estimators=100, random_state=42).
+fn train(rows: List[List[Float]], target: List[Float], encoders: List[LabelEncoder], trees: Int, seed: Int) -> SalesPredictor:
+    let scalers = columns(rows) |> std.iter.map(c => Scaler.fit(c))
+    SalesPredictor(scalers: scalers, forest: fit_forest_regressor(scale(scalers, rows), target, trees, seed), encoders: encoders)
+
+fn predict(m: SalesPredictor, rows: List[List[Float]]) -> List[Float]:
+    predict_values(m.forest, scale(m.scalers, rows))
+
+# evaluate: MAE and MSE on the test rows.
+fn evaluate(m: SalesPredictor, rows: List[List[Float]], target: List[Float]) -> (Float, Float):
+    let p = predict(m, rows)
+    (std.ml.mae(target, p), std.ml.mse(target, p))
+
+fn save_model(m: SalesPredictor, path: Text) -> Result[(), Text]:
+    match std.path.parent(path):
+        case Some(dir):
+            if not dir.is_empty():
+                std.fs.create_dir(dir)?
+        case None:
+            pass
+    std.model.save(m, path)
+
+# load: a file that does not hold a SalesPredictor is an error that says what it holds.
+fn load_model(path: Text) -> Result[SalesPredictor, Text]:
+    std.model.load(path)

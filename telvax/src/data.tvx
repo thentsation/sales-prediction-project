@@ -1,0 +1,62 @@
+# src/utils/data_loader.py: read the sales, drop the rows with a missing value, the datetime as epoch seconds, a label
+# encoder for each text column, and the split into training and test rows.
+from std.ml import LabelEncoder
+from std.random import Generator
+
+let CATEGORICAL_COLUMNS = ["cash_type", "card", "coffee_name"]
+
+# A row of data/sales_data.csv. `card` is empty for the sales paid in cash.
+type Sale:
+    date: Text
+    datetime: Text
+    cash_type: Text?
+    card: Text?
+    money: Float?
+    coffee_name: Text?
+
+# The features of the model, in the order of the Python DataFrame: datetime, cash_type, card, coffee_name.
+type Dataset:
+    rows: List[List[Float]]
+    target: List[Float]
+    encoders: List[LabelEncoder]
+
+# `pd.to_datetime(...)` as seconds since 1970 (with the milliseconds). See the README: the Python divides
+# nanoseconds by 10^9, but pandas 3 reads this column as milliseconds, so its values are 1000 times smaller.
+fn epoch(text: Text) -> Result[Float, Text]:
+    std.time.parse(text, "%Y-%m-%d %H:%M:%S%.f")
+
+# load_data without the split: the encoded rows and the target, and the encoders (fitted on every row, as the Python).
+fn load(path: Text) -> Result[Dataset, Text]:
+    let t: Table[Sale] = std.table.read_csv(path)
+    if t.len() == 0:
+        return Err(f"{path} contains no rows")
+    # df.dropna()
+    var kept: List[Sale] = []
+    for s in t.to_rows():
+        if s.cash_type.is_some() and s.card.is_some() and s.money.is_some() and s.coffee_name.is_some() and not s.datetime.is_empty():
+            kept.push(s)
+    if kept.is_empty():
+        return Err(f"{path} became empty after dropping rows with NaN values")
+    let columns = [kept |> std.iter.map(s => s.cash_type.unwrap()), kept |> std.iter.map(s => s.card.unwrap()), kept |> std.iter.map(s => s.coffee_name.unwrap())]
+    let encoders = columns |> std.iter.map(c => LabelEncoder.fit(c))
+    var codes: List[List[Int]] = []
+    var i = 0
+    for e in encoders:
+        codes.push(e.encode(columns.get(i).unwrap()))
+        i = i + 1
+    var rows: List[List[Float]] = []
+    var j = 0
+    for s in kept:
+        rows.push([epoch(s.datetime)?, std.math.to_float(codes.get(0).unwrap().get(j).unwrap()), std.math.to_float(codes.get(1).unwrap().get(j).unwrap()), std.math.to_float(codes.get(2).unwrap().get(j).unwrap())])
+        j = j + 1
+    Ok(Dataset(rows: rows, target: kept |> std.iter.map(s => s.money.unwrap()), encoders: encoders))
+
+# train_test_split(test_size, random_state): the rows shuffled with the seed, the first ceil(test_size * n) for the test.
+# The generator is Telvax's, so these are not the rows scikit-learn picks for the same seed.
+fn split(n: Int, test_size: Float, seed: Int) -> (List[Int], List[Int]):
+    var order: List[Int] = []
+    for i in range(n):
+        order.push(i)
+    let shuffled = Generator.new(seed).shuffle(order)
+    let n_test = std.math.to_int(std.math.ceil(test_size * std.math.to_float(n)))
+    (shuffled.skip(n_test), shuffled.take(n_test))

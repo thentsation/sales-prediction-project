@@ -1,0 +1,37 @@
+# src/api/main.py: GET /health and POST /predict, with the predictor loaded once when the server starts.
+#   telvax serve src/service.tvx --port 8000          (MODEL_PATH, default models/sales_predictor.tvxmodel)
+from std.http import Status
+from model import SalesPredictor, DEFAULT_MODEL_PATH, load_model, predict
+
+serve:
+    on_start: [load_predictor]
+
+# The predictor, once on_start has loaded it.
+let PREDICTOR: List[SalesPredictor] = []
+
+fn load_predictor() -> Result[(), Text]:
+    let path = std.env.get("MODEL_PATH").unwrap_or(DEFAULT_MODEL_PATH)
+    PREDICTOR.push(load_model(path)?)
+    std.log.info(f"loaded {std.model.describe(path)?}")
+    Ok(())
+
+type SalesRequest:
+    # [datetime_epoch_seconds, cash_type_encoded, card_encoded, coffee_name_encoded]
+    features: List[Float]
+
+type SalesResponse:
+    predicted_sales: Float
+
+type Health:
+    status: Text
+
+@endpoint(GET, "/health")
+fn health() -> Result[Health, Text]:
+    Ok(Health(status: "ok"))
+
+@endpoint(POST, "/predict")
+fn predict_sales(request: SalesRequest) -> Result[SalesResponse, Status]:
+    if request.features.len() != 4:
+        return Err(Status.Unprocessable(f"features must have 4 values, found {request.features.len()}"))
+    let p = predict(PREDICTOR.get(0).unwrap(), [request.features])
+    Ok(SalesResponse(predicted_sales: p.get(0).unwrap()))

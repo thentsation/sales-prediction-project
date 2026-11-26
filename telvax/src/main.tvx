@@ -1,0 +1,37 @@
+# src/main.py: train, evaluate, log the metrics to MLflow and save the predictor.
+#   tvpm run main                                   # data/sales_data.csv, models/sales_predictor.tvxmodel
+#   MLFLOW_TRACKING_URI=http://localhost:5000 tvpm run main
+from data import load, split
+from model import train, evaluate, save_model
+from mlflow.client import from_env
+from mlflow.tracking import get_or_create, start_run, end_run, log_metric, log_param
+
+fn pick(rows: List[List[Float]], idx: List[Int]) -> List[List[Float]]:
+    idx |> std.iter.map(i => rows.get(i).unwrap())
+
+fn values(xs: List[Float], idx: List[Int]) -> List[Float]:
+    idx |> std.iter.map(i => xs.get(i).unwrap())
+
+# Trains the sales predictor and saves it with its preprocessing.
+fn main(data: Text = "../data/sales_data.csv", model_path: Text = "models/sales_predictor.tvxmodel", trees: Int = 100, seed: Int = 42, test_size: Float = 0.2) -> Result[Text, Text]:
+    std.log.info("Starting training")
+    let d = load(data)?
+    let (tr, te) = split(std.math.to_int(d.rows.len()), test_size, seed)
+    let model = train(pick(d.rows, tr), values(d.target, tr), d.encoders, trees, seed)
+    std.log.info("SalesPredictor model trained")
+    let (mae, mse) = evaluate(model, pick(d.rows, te), values(d.target, te))
+    std.log.info(f"SalesPredictor evaluated (MAE: {mae:.4f}, MSE: {mse:.4f})")
+    # mlflow.set_experiment("sales-prediction") and a run with the two metrics, when a server is configured.
+    match from_env():
+        case Ok(c):
+            let run = start_run(c, get_or_create(c, "sales-prediction")?, "train")?
+            log_param(c, run.run_id, "n_estimators", f"{trees}")?
+            log_metric(c, run.run_id, "mae", mae, 0)?
+            log_metric(c, run.run_id, "mse", mse, 0)?
+            end_run(c, run.run_id, "FINISHED")?
+            std.log.info(f"logged to MLflow, run {run.run_id}")
+        case Err(e):
+            std.log.info(f"no MLflow: {e}")
+    save_model(model, model_path)?
+    std.log.info(f"SalesPredictor model saved to {model_path}")
+    Ok(f"Model trained and saved. MAE: {mae:.4f}, MSE: {mse:.4f}")

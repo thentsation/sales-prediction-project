@@ -1,0 +1,25 @@
+from std.ml import LabelEncoder
+from model import train, predict, evaluate, save_model, load_model
+
+fn rows() -> List[List[Float]]:
+    [[1.0, 0.0, 10.0], [2.0, 0.0, 11.0], [3.0, 1.0, 50.0], [4.0, 1.0, 52.0], [5.0, 1.0, 51.0], [6.0, 0.0, 12.0]]
+
+fn target() -> List[Float]:
+    [10.0, 10.0, 30.0, 30.0, 30.0, 10.0]
+
+fn test_the_forest_learns_two_groups():
+    let m = train(rows(), target(), [LabelEncoder.fit(["a", "b"])], 10, 1)
+    let p = predict(m, [[1.5, 0.0, 10.5], [4.5, 1.0, 51.0]])
+    assert(std.math.abs(p.get(0).unwrap() - 10.0) < 1.0 and std.math.abs(p.get(1).unwrap() - 30.0) < 1.0)
+    let (mae, mse) = evaluate(m, rows(), target())
+    assert(mae < 1.0 and mse < 1.0)
+
+fn test_the_predictor_is_saved_with_its_scalers_and_loads_as_itself():
+    let m = train(rows(), target(), [LabelEncoder.fit(["a", "b"])], 5, 2)
+    let path = "test-output/model.tvxmodel"
+    save_model(m, path).unwrap()
+    let back = load_model(path).unwrap()
+    assert_eq(predict(back, rows()), predict(m, rows()))
+    assert_eq(back.scalers.get(2).unwrap().mean(), m.scalers.get(2).unwrap().mean())
+    std.fs.write(path, "not a model").unwrap()
+    assert(load_model(path).is_err())

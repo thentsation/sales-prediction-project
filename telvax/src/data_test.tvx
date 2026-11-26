@@ -1,0 +1,17 @@
+from data import epoch, load, split
+
+fn test_the_datetime_is_epoch_seconds_with_the_milliseconds():
+    assert_eq(epoch("2024-03-01 10:15:50.520").unwrap(), 1709288150.52)
+    assert(epoch("yesterday").is_err())
+
+fn test_the_rows_without_a_card_are_dropped_and_each_text_column_is_encoded():
+    let d = load("../data/sales_data.csv").unwrap()
+    assert_eq(d.rows.len(), 2086)
+    assert_eq(d.encoders.get(0).unwrap().classes(), ["card"])
+    assert_eq(d.encoders.get(2).unwrap().classes().len(), 8)
+    assert_eq(d.rows.get(0).unwrap().len(), 4)
+
+fn test_the_split_takes_a_fifth_for_the_test_and_the_seed_fixes_it():
+    let (tr, te) = split(2086, 0.2, 42)
+    assert_eq((tr.len(), te.len()), (1668, 418))
+    assert_eq(split(2086, 0.2, 42), (tr, te))

@@ -1,0 +1,42 @@
+name: Telvax
+
+# The Telvax version (telvax/): check, format, tests, training, and the service answering.
+on:
+  pull_request:
+    paths: ["telvax/**", ".github/workflows/telvax.yml"]
+  push:
+    branches: [main, feat/telvax]
+    paths: ["telvax/**", ".github/workflows/telvax.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: telvax
+    steps:
+      - uses: actions/checkout@v7
+      # std.ml, std.model and the native loops of the `learn` package are in the `develop` branch of Telvax and not yet in a
+      # release; the packages `learn` and `mlflow` come from the registry of tvpm. Once a release has them, this becomes the
+      # install script of Telvax.
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+      - name: Telvax from develop
+        run: cargo install --locked --git https://github.com/telvax/telvax --branch develop telvax_cli telvax_pkg
+      - run: tvpm install
+      - name: Check, format and tests
+        run: |
+          for f in src/*.tvx; do telvax check "$f"; telvax fmt --check "$f"; done
+          for f in src/*_test.tvx; do telvax test "$f"; done
+      - name: Train (20 trees, to be quick)
+        run: tvpm run main --trees 20
+      - name: The service answers
+        run: |
+          telvax serve src/service.tvx --port 8000 &
+          for i in $(seq 1 30); do curl -fs localhost:8000/health && break; sleep 1; done
+          curl -fs -X POST localhost:8000/predict -H 'content-type: application/json' -d '{"features":[1711000000.0,0,100,3]}' | tee answer.json
+          grep -q predicted_sales answer.json
+          [ "$(curl -s -o /dev/null -w '%{http_code}' -X POST localhost:8000/predict -H 'content-type: application/json' -d '{"features":[1,2,3]}')" = 422 ]
